@@ -17,7 +17,7 @@ resource "aws_launch_configuration" "agent-lc" {
                 docker run -d -p 80:3000 --mount type=bind,source=/efs,target=/usr/src/redmine/files --env REDMINE_DB_MYSQL=${aws_rds_cluster.mysql-cluster.endpoint} --env REDMINE_DB_USERNAME=${aws_rds_cluster.mysql-cluster.master_username} --env REDMINE_DB_PASSWORD=${aws_rds_cluster.mysql-cluster.master_password} --env REDMINE_DB_DATABASE=${aws_rds_cluster.mysql-cluster.database_name} redmine
 
                 EOF
-    security_groups = ["${aws_security_group.asg-target-security-group.id}","${aws_security_group.ssh-inbound.id}", "${aws_security_group.rds-access.id}","${aws_security_group.efs-access.id}"]
+    security_groups = ["${aws_security_group.asg-target-security-group.id}", "${aws_security_group.rds-access.id}","${aws_security_group.efs-access.id}"]
     lifecycle {
         create_before_destroy = true
     }

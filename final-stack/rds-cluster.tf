@@ -13,7 +13,7 @@ data "aws_availability_zones" "available" {}
 
 resource "aws_rds_cluster" "mysql-cluster" {
 
-    #cluster_identifier            = "redmine-mysql-cluster"
+    cluster_identifier            = "redmine-mysql-cluster"
     database_name                 = "mydb"
     master_username               = "mysql_admin"
     master_password               = "password1"
@@ -42,8 +42,6 @@ resource "aws_rds_cluster_instance" "mysql_cluster_instance" {
 
     identifier            = "mysql-instance-${count.index}"
     cluster_identifier    = "${aws_rds_cluster.mysql-cluster.id}"
-    #engine                = "aurora"
-    #engine_version        = "5.6.10a"
     instance_class        = "db.t2.small"
     db_subnet_group_name  = "${aws_db_subnet_group.mysql_subnet_group.name}"
     publicly_accessible   = false

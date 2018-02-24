@@ -53,7 +53,9 @@ resource "aws_instance" "bastion-host" {
   }
 
   user_data = "sudo yum update -y\n,sudo reboot\n"
-
+tags {
+  Name  = "Bastion-host"
+}
 }
 
 ##### Outputs ##########

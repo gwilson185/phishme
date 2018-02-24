@@ -94,25 +94,34 @@ resource "aws_security_group" "bastion-security-group" {
   }
 }
 
-resource "aws_network_acl" "lb-network-acl" {
+resource "aws_network_acl" "private-network-acl" {
   vpc_id = "${aws_vpc.phishme-vpc.id}"
-  subnet_ids = ["${aws_subnet.lb1.id}","${aws_subnet.lb2.id}","${aws_subnet.lb3.id}"]
+  subnet_ids = ["${aws_subnet.rds1.id}","${aws_subnet.rds2.id}","${aws_subnet.rds3.id}"]
+  tags {Name = "private-network-acl"}
   ingress {
     action = "allow"
-    from_port = 80
+    from_port = 2049
     protocol = "tcp"
     rule_no = 100
-    to_port = 80
-    cidr_block = "0.0.0.0/0"
+    to_port = 2049
+    cidr_block = "198.18.0.0/17"
+  }
+  ingress {
+    action = "allow"
+    from_port = 3306
+    protocol = "tcp"
+    rule_no = 200
+    to_port = 3306
+    cidr_block = "198.18.0.0/17"
   }
   ingress {
     action = "allow"
     from_port = 0
     icmp_code = 0
-    protocol = "icmp"
-    rule_no = 200
+    protocol = "-1"
+    rule_no = 300
     to_port = 0
-    cidr_block = "198.18.0.0/17"
+    cidr_block = "198.18.128.0/17"
   }
 
   egress {
@@ -121,84 +130,18 @@ resource "aws_network_acl" "lb-network-acl" {
     protocol = "tcp"
     rule_no = 100
     to_port = 65535
-    cidr_block = "0.0.0.0/0"
+    cidr_block = "198.18.0.0/17"
   }
 egress {
     action = "allow"
-    from_port = 80
-    protocol = "tcp"
-    rule_no = 200
-    to_port = 80
-    cidr_block = "198.18.0.0/17"
-  }
-  egress {
-    action = "allow"
     from_port = 0
-    icmp_code = -1
-    protocol = "icmp"
-    rule_no = 300
+    protocol = "-1"
+    rule_no = 200
     to_port = 0
-    cidr_block = "0.0.0.0/0"
+    cidr_block = "198.18.128.0/17"
   }
-
 }
 
-resource "aws_network_acl" "asg-target-network-acl" {
-  vpc_id = "${aws_vpc.phishme-vpc.id}"
-  subnet_ids = ["${aws_subnet.public1.id}","${aws_subnet.public2.id}","${aws_subnet.public3.id}"]
-  ingress {
-    action = "allow"
-    from_port = 80
-    protocol = "tcp"
-    rule_no = 100
-    to_port = 80
-    cidr_block = "198.18.0.0/17"
-  }
-  ingress {
-    action = "allow"
-    from_port = 0
-    icmp_code = 0
-    protocol = "icmp"
-    rule_no = 200
-    to_port = 0
-    cidr_block = "198.18.0.0/17"
-  }
-  ingress {
-    action = "allow"
-    from_port = 22
-    protocol = "tcp"
-    rule_no = 400
-    to_port = 22
-    cidr_block = "198.18.0.0/17"
-  }
-
-  egress {
-    action = "allow"
-    from_port = 1024
-    protocol = "tcp"
-    rule_no = 100
-    to_port = 65535
-    cidr_block = "198.18.0.0/16"
-  }
-egress {
-    action = "allow"
-    from_port = 80
-    protocol = "tcp"
-    rule_no = 200
-    to_port = 80
-    cidr_block = "198.18.0.0/17"
-  }
-  egress {
-    action = "allow"
-    from_port = 0
-    icmp_code = 8
-    protocol = "icmp"
-    rule_no = 300
-    to_port = 0
-    cidr_block = "0.0.0.0/0"
-  }
-
-}
 
 resource "aws_security_group" "asg-target-security-group" {
   name = "asg-target-security-group"
@@ -211,7 +154,7 @@ resource "aws_security_group" "asg-target-security-group" {
     cidr_blocks = ["198.18.0.0/16"]
   }
   ingress {
-    from_port   = "0"
+    from_port   = "8"
     to_port     = "0"
     protocol    = "icmp"
     cidr_blocks = ["198.18.0.0/16"]

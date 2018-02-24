@@ -197,20 +197,20 @@ EOF
 resource "aws_flow_log" "subnet-pub1-flow-log" {
   iam_role_arn = "${aws_iam_role.flow-log-role.arn}"
   log_group_name = "${aws_cloudwatch_log_group.subnet-flow-log-grp.name}"
-  traffic_type = "All"
+  traffic_type = "ALL"
   subnet_id = "${aws_subnet.public1.id}"
 }
 
 resource "aws_flow_log" "subnet-pub2-flow-log" {
   iam_role_arn = "${aws_iam_role.flow-log-role.arn}"
   log_group_name = "${aws_cloudwatch_log_group.subnet-flow-log-grp.name}"
-  traffic_type = "All"
+  traffic_type = "ALL"
   subnet_id = "${aws_subnet.public2.id}"
 }
 
 resource "aws_flow_log" "subnet-pub3-flow-log" {
   iam_role_arn = "${aws_iam_role.flow-log-role.arn}"
   log_group_name = "${aws_cloudwatch_log_group.subnet-flow-log-grp.name}"
-  traffic_type = "All"
+  traffic_type = "ALL"
   subnet_id = "${aws_subnet.public3.id}"
 }
