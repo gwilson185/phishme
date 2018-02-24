@@ -4,6 +4,9 @@ provider "aws" {
   profile                 = "tc-speed"
 }
 
+variable "keypair_name" {
+  default = "tc-gwilson"
+}
 
 resource "random_id" "environment-hash" {
   byte_length = 8
@@ -42,7 +45,7 @@ resource "aws_instance" "bastion-host" {
   # Using AMazon Linux latest AMI
   ami = "ami-97785bed"
   instance_type = "t2.micro"
-  key_name = "tc-gwilson"
+  key_name = "${var.keypair_name}"
   subnet_id = "${aws_subnet.public1.id}"
   vpc_security_group_ids = [ "${aws_security_group.ssh-inbound.id}", "${aws_security_group.bastion-security-group.id}"]
 

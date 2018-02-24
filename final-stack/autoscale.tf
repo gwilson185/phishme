@@ -1,7 +1,7 @@
 resource "aws_launch_configuration" "agent-lc" {
     name_prefix = "launch-config-"
     image_id = "ami-97785bed"
-    key_name = "tc-gwilson"
+    key_name = "${var.keypair_name}"
     instance_type = "t2.micro"
     user_data = <<-EOF
                 #!/usr/bin/env bash

@@ -40,7 +40,7 @@ resource "aws_rds_cluster_instance" "mysql_cluster_instance" {
 
     count                 = 2
 
-    identifier            = "mysql-instance-${count.index}"
+    identifier            = "mysql-cluster-instance"
     cluster_identifier    = "${aws_rds_cluster.mysql-cluster.id}"
     instance_class        = "db.t2.small"
     db_subnet_group_name  = "${aws_db_subnet_group.mysql_subnet_group.name}"
