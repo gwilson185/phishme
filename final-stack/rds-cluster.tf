@@ -16,7 +16,7 @@ resource "aws_rds_cluster" "mysql-cluster" {
     cluster_identifier            = "redmine-mysql-cluster"
     database_name                 = "mydb"
     master_username               = "mysql_admin"
-    master_password               = "password1"
+    master_password               = "${random_string.mysql_password.result}"
     #iam_database_authentication_enabled = true
     engine                        = "aurora"
     engine_version                = "5.6.34"
@@ -40,7 +40,7 @@ resource "aws_rds_cluster_instance" "mysql_cluster_instance" {
 
     count                 = 2
 
-    identifier            = "mysql-cluster-instance"
+    identifier            = "mysql-cluster-instance-${count.index}"
     cluster_identifier    = "${aws_rds_cluster.mysql-cluster.id}"
     instance_class        = "db.t2.small"
     db_subnet_group_name  = "${aws_db_subnet_group.mysql_subnet_group.name}"

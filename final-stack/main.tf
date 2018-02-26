@@ -12,6 +12,17 @@ resource "random_id" "environment-hash" {
   byte_length = 8
 }
 
+resource random_string "mysql_password"
+{ length = 20
+  special = false
+}
+
+ /*data "null_data_source" "credstash-mysql_admin-password" {
+
+  has_computed_default = "${module.credstash.put_cmd} mysql_admin ${random_string.mysql_password.result}"
+}
+*/
+
 resource "aws_iam_user" "redmine_user" {
   name = "redmine-${random_id.environment-hash.hex}"
 }
@@ -64,4 +75,8 @@ tags {
 ##### Outputs ##########
 output "bastion-host" {
   value = "ssh://${aws_instance.bastion-host.public_dns}"
+}
+
+output "mysql_admin_password" {
+  value = "${random_string.mysql_password.result}"
 }
